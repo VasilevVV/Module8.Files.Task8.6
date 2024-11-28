@@ -1,47 +1,141 @@
-﻿namespace Module8.Files.Task8.Exercise1.ConsolePresenter;
+﻿using System.IO;
+using System.Linq;
+using System.Runtime;
+
+namespace Module8.Files.Task6.Exercise1.ConsolePresenter;
 
 internal class Program
 {
+    const long intervalLifeTimeMinute = 30L;
+
+
+    public static bool IsFileSystemOld(FileSystemInfo fileSystemInfo)
+    {
+        long fileLifeTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - ((DateTimeOffset)fileSystemInfo.LastWriteTimeUtc).ToUnixTimeSeconds();
+        if (fileLifeTime > intervalLifeTimeMinute * 60L)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }            
+    }
+
+    public static void GetFilesAndFoldersToConsole(DirectoryInfo directoryInfo)
+    {
+        Console.WriteLine($"В директории: {directoryInfo.FullName}");
+        foreach (var systemFile in directoryInfo.GetFileSystemInfos())
+        {
+            if (systemFile is DirectoryInfo directory)
+            {
+                Console.WriteLine($"директория: {systemFile.FullName}\t|\t{IsFileSystemOld(directory)}");
+            }
+            else if (systemFile is FileInfo file)
+            {
+                Console.WriteLine($"файл: {systemFile.FullName}\t|\t{IsFileSystemOld(file)}");
+            }
+        }
+        Console.WriteLine();
+        foreach (var dir in directoryInfo.GetDirectories())
+        {
+            if(dir.FullName.Length > 100)
+            {
+                throw new Exception("Слишком длиный путь до папки");
+            }
+            GetFilesAndFoldersToConsole(dir);
+        }
+    }
+
+    public static Data.FilesAndDirsToDelete GetFilesAndFoldersToDelete(DirectoryInfo directoryInfo)
+    {
+        Data.FilesAndDirsToDelete filesAndDirsToDelete = new Data.FilesAndDirsToDelete();
+
+        foreach (var file in directoryInfo.GetFiles())
+        {
+            bool isFileOld = IsFileSystemOld((FileSystemInfo)file);
+            if (isFileOld)
+            {
+                Console.WriteLine($"файл: {file.FullName}\t|\t{isFileOld}");
+                filesAndDirsToDelete.Add((file.FullName, isFileOld));                
+                //file.Delete();
+            }
+        }
+        foreach (var dir in directoryInfo.GetDirectories())
+        {
+            GetFilesAndFoldersToDelete(dir);
+            bool isDirOld = IsFileSystemOld((FileSystemInfo)dir);
+            if (isDirOld)
+            {
+                Console.WriteLine($"папка: {dir.FullName}\t|\t{isDirOld}");
+                filesAndDirsToDelete.Add((dir.FullName, isDirOld));                
+                //dir.Delete(false);
+            }
+        }
+
+        return filesAndDirsToDelete;
+    }
+
+
+    
+
+
     static void Main(string[] args)
     {
-        const long intervalLifeTimeMinute = 30L;
-
         Console.WriteLine("Введите полный путь до папки для очистки от файлов и папок, которые не использвались более 30 минут:");
         string? dirName = Console.ReadLine();
 
-        #if DEBUG
-        if (String.IsNullOrEmpty(dirName))
+        if (string.IsNullOrEmpty(dirName))
         {
             dirName = @"G:\TempFolder";
             Console.WriteLine(dirName);
         }
-        #endif
 
-        DirectoryInfo dirInfo = new DirectoryInfo(dirName);
-
+        var dirInfo = new DirectoryInfo(dirName);
+                
         if (dirInfo.Exists)
         {
-            FileSystemInfo[] files = dirInfo.GetFileSystemInfos();
+            Console.WriteLine("--------------------------------------------------------");
+            GetFilesAndFoldersToConsole(dirInfo);
+            Console.WriteLine("--------------------------------------------------------");
+            Console.WriteLine("На удаление:");
+            Data.FilesAndDirsToDelete filesAndFoldersToDelete = GetFilesAndFoldersToDelete(dirInfo);
+            Console.WriteLine("--------------------------------------------------------");
+            GetFilesAndFoldersToConsole(dirInfo);
+            Console.WriteLine("--------------------------------------------------------");
+            
 
-            #if DEBUG
-            foreach (FileSystemInfo file in files)
+            FileSystemInfo[] systemFiles = dirInfo.GetFileSystemInfos();
+
+            foreach (FileSystemInfo systemFile in systemFiles)
             {
-                long fileLifeTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - ((DateTimeOffset)file.LastWriteTimeUtc).ToUnixTimeSeconds();
-                Console.WriteLine($"{file.FullName}\t|\t{file.LastWriteTimeUtc}\t|\t{fileLifeTime}");
-            }
-            #endif
-
-            foreach (FileSystemInfo file in files)
-            {
-                long fileLifeTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - ((DateTimeOffset)file.LastWriteTimeUtc).ToUnixTimeSeconds();
-
-                if (fileLifeTime > (intervalLifeTimeMinute * 60L))
+                if (systemFile is DirectoryInfo directory)
                 {
-                    Console.WriteLine($"{file.FullName}\t|\t{file.LastWriteTimeUtc}\t|\t{fileLifeTime}");
+                    Console.WriteLine($"Директория: {systemFile.FullName}");
+                }
+                else if (systemFile is FileInfo file)
+                {
+                    Console.WriteLine($"Файл: {systemFile.FullName}");
+                }
+
+                long fileLifeTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - ((DateTimeOffset)systemFile.LastWriteTimeUtc).ToUnixTimeSeconds();
+                Console.WriteLine($"{systemFile.FullName}\t|\t{systemFile.LastWriteTimeUtc}\t|\t{fileLifeTime}");
+            }
+            Console.WriteLine();
+
+            foreach (FileSystemInfo file in systemFiles)
+            {
+                long fileLifeTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - ((DateTimeOffset)file.LastWriteTimeUtc).ToUnixTimeSeconds();
+
+                if (fileLifeTime > intervalLifeTimeMinute * 60L)
+                {
+                    //Console.WriteLine($"{file.FullName}\t|\t{file.LastWriteTimeUtc}\t|\t{fileLifeTime}");
+
                     try
                     {
-                        file.Delete(); // Удаление со всем содержимым
-                        Console.WriteLine("Каталог удален");
+                        //file.Delete(); // Удаление со всем содержимым
+                        Console.WriteLine("Каталог удален:");
+                        Console.WriteLine($"{file.FullName}\t|\t{file.LastWriteTimeUtc}\t|\t{fileLifeTime}");
                     }
                     catch (Exception ex)
                     {
@@ -49,9 +143,10 @@ internal class Program
                     }
                 }
             }
-
-
         }
+
+
+
 
         Console.ReadKey();
     }
