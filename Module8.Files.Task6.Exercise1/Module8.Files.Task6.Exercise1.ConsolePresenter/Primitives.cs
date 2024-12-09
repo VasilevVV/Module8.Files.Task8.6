@@ -2,6 +2,9 @@
 
 namespace Module8.Files.Task6.Exercise1.ConsolePresenter;
 
+/// <summary>
+/// Используемые статические методы
+/// </summary>
 public static class Primitives
 {
     /// <summary>
@@ -72,7 +75,7 @@ public static class Primitives
             bool isFileOld = IsFileSystemOld((FileSystemInfo)file, intervalLifeTimeMinute);
             if (isFileOld)
             {
-                Console.WriteLine($"Удаляем файл: {file.FullName}\t|\t{isFileOld}");
+                Console.WriteLine($"Удаляем файл: {file.FullName}");
                 filesAndDirsToDelete.Add((file.FullName, isFileOld));                
             }
         }
@@ -86,7 +89,7 @@ public static class Primitives
             bool isDirOld = IsFileSystemOld((FileSystemInfo)dir, intervalLifeTimeMinute);
             if (isDirOld)
             {
-                Console.WriteLine($"Удаляем папку: {dir.FullName}\t|\t{isDirOld}");
+                Console.WriteLine($"Удаляем папку: {dir.FullName}");
                 filesAndDirsToDelete.Add((dir.FullName, isDirOld));
             }
         }
