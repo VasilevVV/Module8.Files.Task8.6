@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Module8.Files.Task6.Exercise1.ConsolePresenter;
+﻿namespace Module8.Files.Task6.Exercise1.ConsolePresenter;
 
 /// <summary>
 /// Используемые статические методы
@@ -147,16 +145,9 @@ public static class Primitives
             }
         }
     }
-
-
-    /// <summary>
-    /// Проверка массива на равенство нулю или пустым значениям
-    /// </summary>
-    /// <param name="array">Массив</param>
-    /// <returns>True если массив равен null или пустой, false - если нет</returns>
-    private static bool IsNullOrEmptyArr(this Array array)
-    {
-        return (array == null || array.Length == 0);
-    }
+        
 }
+
+
+
 
