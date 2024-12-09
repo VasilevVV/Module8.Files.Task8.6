@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Module8.Files.Task6.Exercise2.ConsolePresenter
+﻿namespace Module8.Files.Task6.Exercise2.ConsolePresenter
 {
     public static class Primitives
     {
@@ -19,8 +12,7 @@ namespace Module8.Files.Task6.Exercise2.ConsolePresenter
             string? dirName = null;
             do
             {
-                flag = true;
-                Console.WriteLine($"Введите полный путь до папки для расчета размера");
+                flag = true;                
                 dirName = Console.ReadLine();
 #if DEBUG
                 if (string.IsNullOrEmpty(dirName))
@@ -42,8 +34,35 @@ namespace Module8.Files.Task6.Exercise2.ConsolePresenter
             return dirName;
         }
 
-
-        
+        /// <summary>
+        /// Вывод размера папок и файлов в консоль
+        /// </summary>
+        /// <param name="directoryInfo">Директория или папка</param>
+        /// <exception cref="Exception">Слишком длиный путь до папки</exception>
+        public static void GetFilesAndFoldersToConsoleWithSize(DirectoryInfo directoryInfo)
+        {
+            Console.WriteLine("В директории: {0}\t|\t{1} байт", directoryInfo.FullName, directoryInfo.GetSizeOfFolder());
+            foreach (var systemFile in directoryInfo.GetFileSystemInfos())
+            {
+                if (systemFile is DirectoryInfo directory)
+                {
+                    Console.WriteLine("найдена директория: {0}\t|\t{1} байт", directory.FullName, directory.GetSizeOfFolder());
+                }
+                else if (systemFile is FileInfo file)
+                {
+                    Console.WriteLine("найден файл: {0}\t|\t{1} байт", file.FullName, file.Length);
+                }
+            }
+            Console.WriteLine();
+            foreach (var dir in directoryInfo.GetDirectories())
+            {
+                if (dir.FullName.Length > 100)
+                {
+                    throw new Exception($"Слишком длиный путь до папки: {dir.FullName}");
+                }
+                GetFilesAndFoldersToConsoleWithSize(dir);
+            }
+        }
 
     }
 }
