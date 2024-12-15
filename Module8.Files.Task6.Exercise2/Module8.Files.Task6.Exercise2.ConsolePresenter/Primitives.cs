@@ -1,5 +1,8 @@
 ﻿namespace Module8.Files.Task6.Exercise2.ConsolePresenter
 {
+    /// <summary>
+    /// Используемые методы для консоли
+    /// </summary>
     public static class Primitives
     {
         /// <summary>

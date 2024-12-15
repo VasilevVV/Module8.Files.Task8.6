@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Module8.Files.Task6.Exercise4.ConsolePresenter", "Module8.Files.Task6.Exercise4.ConsolePresenter\Module8.Files.Task6.Exercise4.ConsolePresenter.csproj", "{E0E126EA-3AC0-496C-AEC4-31D3C4F3E7DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Module8.Files.Task6.Exercise4.ConsolePresenter", "Module8.Files.Task6.Exercise4.ConsolePresenter\Module8.Files.Task6.Exercise4.ConsolePresenter.csproj", "{E0E126EA-3AC0-496C-AEC4-31D3C4F3E7DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Module8.Files.Task6.Exercise4.Data", "Module8.Files.Task6.Exercise4.Data\Module8.Files.Task6.Exercise4.Data.csproj", "{9C57E9B4-F0F0-4C61-9465-878D89617B9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{E0E126EA-3AC0-496C-AEC4-31D3C4F3E7DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0E126EA-3AC0-496C-AEC4-31D3C4F3E7DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0E126EA-3AC0-496C-AEC4-31D3C4F3E7DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C57E9B4-F0F0-4C61-9465-878D89617B9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C57E9B4-F0F0-4C61-9465-878D89617B9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C57E9B4-F0F0-4C61-9465-878D89617B9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C57E9B4-F0F0-4C61-9465-878D89617B9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
